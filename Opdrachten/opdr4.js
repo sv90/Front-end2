@@ -5,8 +5,7 @@ var geolocatie = geolocatie || {};
 (function() {
 	
 	//Hier komen alle Local variabelen
-	var iets = 'lol';
-	var dat = 'dit';
+	var foo = 'bar';
 	
 	//Object Literal
 	geolocatie.application = {
