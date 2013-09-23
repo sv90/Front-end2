@@ -2,6 +2,8 @@ var frisB = frisB || {};
 
 (function () {
 
+	var result;
+
 	//Controller function
 	frisB.controller = {
 		init: function () {
@@ -27,23 +29,18 @@ var frisB = frisB || {};
 		]
 	};
 	
-	function getWinner() {
-		for (var i = 0; i < frisB.schedule.schedule.length; i++) {
-			var team1 = frisB.schedule.schedule[i].team1Score;
-			var team2 = frisB.schedule.schedule[i].team2Score;
-			if (team1 > team2) {
-				var element = qwery('.team1');
-				//alert(element.length);
-				element.style.color = "red";
-				element.className += " winner";
-			}
-			if (team2 > team1) {
-				frisB.schedule.schedule[i].team2;
+	frisB.calculations = {
+		team1: {
+			class: function(params) {
+				var score1 = frisB.schedule.schedule[0].team1Score;
+				var score2 = frisB.schedule.schedule[0].team2Score;
+				if (score1 > score2) {
+					return "winner";
+				}
 			}
 		}
-	}
+	};
 	
-	//getWinner();
 
 	//Game page
 	frisB.game = {
@@ -86,6 +83,12 @@ var frisB = frisB || {};
 			{ team: "Amsterdam Money Gang", Win: "1", Lost: "3", Sw: "6", Sl: "10", Pw: "30", Pl: "37"}
 		]
 	};
+	
+	//Movies page
+	frisB.movies = {
+		title:'Movies page TEST',
+		data: result;
+	};
 
 	// The URL Router
 	frisB.router = {
@@ -101,6 +104,14 @@ var frisB = frisB || {};
 			    '/ranking': function() {
 			    	frisB.page.render('ranking');
 			    },
+				
+				'/movies': function() {
+					microAjax("http://dennistel.nl/movies", function (res) {
+						result = res;
+					});
+			    	frisB.page.render('movies');
+			    },
+				
 			    '*': function() {
 			    	frisB.page.render('schedule');
 			    }
@@ -133,8 +144,9 @@ var frisB = frisB || {};
 		render: function (route) {
 			// http://javascriptweblog.wordpress.com/2010/04/19/how-evil-is-eval/
 			var data = eval('frisB.'+route);
+			var calculations = frisB.calculations;
 
-			Transparency.render(qwery('[data-route='+route+']')[0], data);
+			Transparency.render(qwery('[data-route='+route+']')[0], data, calculations);
 			frisB.router.change();
 		}
 	}
