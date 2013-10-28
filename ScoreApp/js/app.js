@@ -72,10 +72,8 @@ var FRISB = FRISB || {};
 			    '/ranking': function() {				
 					FRISB.page.render('ranking');			
 				},		
-			    '/game?:game_id': function() {
-					if (this.params.game_id != 'e') {
-						//Get the optional variable
-						game_id = this.params.game_id.split("?");
+			    '/game/:game_id': function(game_id) {
+					if (game_id != "") {
 						
 						//Show the loader
 						loader.style.display = 'block';
@@ -94,10 +92,8 @@ var FRISB = FRISB || {};
 						FRISB.page.render('game');
 					}
 				},
-				'/schedule?:pool_id': function() {
-					if (this.params.pool_id != 'e') {
-						//Get the optional variable
-						var pool_id = this.params.pool_id.split("?");
+				'/schedule/:pool_id': function(pool_id) {
+					if (pool_id != "") {
 						
 						//Get and filter the data
 						var data = JSON.parse(localStorage['schedule']);
