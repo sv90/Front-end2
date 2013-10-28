@@ -2,36 +2,62 @@ var FRISB = FRISB || {};
 
 (function () {
 
+	//Settings
+	var acces_number = '82996312dc';
+	var acces_token = '&access_token=' + acces_number;
+	var tournament_id = '19389';
+	var loader = document.getElementById('loader');
+	
+	var game_id;
+
 	//Controller
 	FRISB.controller = {
 		init: function() {
 			FRISB.router.init();
+			FRISB.buttons.init();
 		}
 	};
-
-	//Schedule
-	FRISB.schedule = {
-		title:'Pool A - Schedule',
-		today: 'Monday 18 March',	//TODO: Display correct date of today
-		data: [
-			{ date: "Monday, 9:00am", team1: "Chasing", team1Score: "13", team2: "Amsterdam Money Gang", team2Score: "9"},
-			{ date: "Monday, 9:00am", team1: "Boomsquad", team1Score: "15", team2: "Beast Amsterdam", team2Score: "11"},
-			{ date: "Monday, 10:00am", team1: "Beast Amsterdam", team1Score: "14", team2: "Amsterdam Money Gang", team2Score: "12"},
-			{ date: "Monday, 10:00am", team1: "Chasing", team1Score: "5", team2: "Burning Snow", team2Score: "15"},
-			{ date: "Monday, 11:00am", team1: "Boomsquad", team1Score: "11", team2: "Amsterdam Money Gang", team2Score: "15"},    
-			{ date: "Monday, 11:00am", team1: "Burning Snow", team1Score: "15", team2: "Beast Amsterdam", team2Score: "6"},
-			{ date: "Monday, 12:00pm", team1: "Chasing", team1Score: "8", team2: "Beast Amsterdam", team2Score: "15"},
-			{ date: "Monday, 12:00pm", team1: "Boomsquad", team1Score: "15", team2: "Burning Snow", team2Score: "8"},
-			{ date: "Monday, 1:00pm", team1: "Chasing", team1Score: "15", team2: "Boomsquad", team2Score: "14"},
-			{ date: "Monday, 1:00pm", team1: "Burning Snow", team1Score: "15", team2: "Amsterdam Money Gang", team2Score: "11"}
-		],
-		calculations: {
-			team1: {	//TODO: Make these calculations work (this.team1Score; doesn't work!)
-				class: function(params) {
-					var score1 = FRISB.schedule.data[0].team1Score;
-					var score2 = FRISB.schedule.data[0].team2Score;
-					if (score1 > score2) {
-						return "winner";
+	
+	//Directives
+	FRISB.directives = {
+		ranking: {
+			objects: {
+				standings: {
+					name: {
+						href: function() {
+							return "#/schedule?" + this.team_id;
+						}
+					}
+				}
+			}
+		},
+		schedule: {
+			date: {
+				text: function() {
+						//I only want the date
+						var date = this.objects[0].start_time.split("-");
+						var time = date[2].split("T");
+						var date = time[0] + "-" + date[1] + "-" + date[0];
+						
+						return date;
+				}
+			},
+			objects: {
+				start_time: {
+					text: function() {
+						//I only want the time
+						var date = this.start_time.split("-");
+						var time = date[2].split("T");
+						var finaltime = time[1].split("+");
+						var finaldate = time[0] + "-" + date[1] + "-" + date[0];
+						var time = finaltime[0];
+						
+						return time;			
+					}
+				},
+				track_score: {
+					href: function() {
+						return '#/game?' + this.id;
 					}
 				}
 			}
@@ -39,102 +65,202 @@ var FRISB = FRISB || {};
 	}
 	
 
-	//Game
-	FRISB.game = {
-		title:'Pool A - Score: Boomsquad vs. Burning Snow',		//TODO: Can display teams dynamicly!
-		data : [
-			{ score: "1", team1: "Boomsquad", team1Score: "1", team2: "Burning Snow", team2Score: "0"},
-			{ score: "2", team1: "Boomsquad", team1Score: "2", team2: "Burning Snow", team2Score: "0"},
-			{ score: "3", team1: "Boomsquad", team1Score: "2", team2: "Burning Snow", team2Score: "1"},
-			{ score: "4", team1: "Boomsquad", team1Score: "2", team2: "Burning Snow", team2Score: "2"},
-			{ score: "5", team1: "Boomsquad", team1Score: "3", team2: "Burning Snow", team2Score: "2"},
-			{ score: "6", team1: "Boomsquad", team1Score: "4", team2: "Burning Snow", team2Score: "2"},
-			{ score: "7", team1: "Boomsquad", team1Score: "5", team2: "Burning Snow", team2Score: "2"},
-			{ score: "8", team1: "Boomsquad", team1Score: "5", team2: "Burning Snow", team2Score: "3"},
-			{ score: "9", team1: "Boomsquad", team1Score: "6", team2: "Burning Snow", team2Score: "3"},
-			{ score: "10", team1: "Boomsquad", team1Score: "7", team2: "Burning Snow", team2Score: "3"},
-			{ score: "11", team1: "Boomsquad", team1Score: "7", team2: "Burning Snow", team2Score: "4"},
-			{ score: "12", team1: "Boomsquad", team1Score: "8", team2: "Burning Snow", team2Score: "4"},
-			{ score: "13", team1: "Boomsquad", team1Score: "8", team2: "Burning Snow", team2Score: "5"},
-			{ score: "14", team1: "Boomsquad", team1Score: "8", team2: "Burning Snow", team2Score: "6"},
-			{ score: "15", team1: "Boomsquad", team1Score: "9", team2: "Burning Snow", team2Score: "6"},
-			{ score: "16", team1: "Boomsquad", team1Score: "9", team2: "Burning Snow", team2Score: "7"},
-			{ score: "17", team1: "Boomsquad", team1Score: "10", team2: "Burning Snow", team2Score: "7"},
-			{ score: "18", team1: "Boomsquad", team1Score: "11", team2: "Burning Snow", team2Score: "7"},
-			{ score: "19", team1: "Boomsquad", team1Score: "12", team2: "Burning Snow", team2Score: "7"},
-			{ score: "20", team1: "Boomsquad", team1Score: "13", team2: "Burning Snow", team2Score: "7"},
-			{ score: "21", team1: "Boomsquad", team1Score: "14", team2: "Burning Snow", team2Score: "7"},
-			{ score: "22", team1: "Boomsquad", team1Score: "14", team2: "Burning Snow", team2Score: "8"},
-			{ score: "23", team1: "Boomsquad", team1Score: "15", team2: "Burning Snow", team2Score: "8"}
-		]
-	};
-
-	//Ranking
-	FRISB.ranking = {
-		title:'Pool A - Ranking',
-		data: [
-			{ team: "Chasing", Win: "2", Lost: "2", Sw: "7", Sl: "9", Pw: "35", Pl: "39"},
-			{ team: "Boomsquad", Win: "2", Lost: "2", Sw: "9", Sl: "8", Pw: "36", Pl: "34"},
-			{ team: "Burning Snow", Win: "3", Lost: "1", Sw: "11", Sl: "4", Pw: "36", Pl: "23"},
-			{ team: "Beast Amsterdam", Win: "2", Lost: "2", Sw: "6", Sl: "8", Pw: "30", Pl: "34"},
-			{ team: "Amsterdam Money Gang", Win: "1", Lost: "3", Sw: "6", Sl: "10", Pw: "30", Pl: "37"}
-		]
-	};
-	
-	//Movies
-	FRISB.movies = {
-		title: 'Movies page'
-	};
-
 	// The URL Router
 	FRISB.router = {
 		init: function() {
 	  		routie({
-			    '/schedule': function() { FRISB.page.render('schedule'); },				
-			    '/game': function() { FRISB.page.render('game'); },				
-			    '/ranking': function() { FRISB.page.render('ranking'); },
+			    '/ranking': function() {				
+					FRISB.page.render('ranking');			
+				},		
+			    '/game?:game_id': function() {
+					if (this.params.game_id != 'e') {
+						//Get the optional variable
+						game_id = this.params.game_id.split("?");
+						
+						//Show the loader
+						loader.style.display = 'block';
+						
+						//Get newest scores off leaguevine
+						var api_url = 'https://api.leaguevine.com/v1/games/' + game_id[1] + '/?';
+						$$.json(api_url + acces_token,{},function(data){
+							Transparency.render(qwery('[data-route=game]')[0], data);
+							
+							FRISB.page.render('game');
+							
+							//Hide the loader
+							loader.style.display = 'none';
+						});						
+					} else {
+						FRISB.page.render('game');
+					}
+				},
+				'/schedule?:pool_id': function() {
+					if (this.params.pool_id != 'e') {
+						//Get the optional variable
+						var pool_id = this.params.pool_id.split("?");
+						
+						//Get and filter the data
+						var data = JSON.parse(localStorage['schedule']);
+						var filtered = {};
+						var objects = [];
+						for (var i = 0; i < data.objects.length; i++) {
+							if (data.objects[i].team_1_id == pool_id);
+							if (data.objects[i].team_2_id == pool_id);
+							objects.push(data.objects[i]);
+						}
+						
+						//Log and store new variables
+						filtered.objects = objects;
+						console.log(filtered);
+						localStorage['schedule'] = filtered;
+						
+						//Finally render the page
+						FRISB.page.render('schedule');
+					} else {
+						//Just render the page with cached data
+						FRISB.page.render('schedule');
+					}
+				},
 				
-				'/movies': function() {		//TODO: Request can take quite a while, should inform the user of it's loading content...
-					microAjax("http://dennistel.nl/movies",function(result) {
-						FRISB.movies.data = JSON.parse(result);
-						FRISB.page.render('movies');
+			    '*': function() {
+					//localStorage.clear();
+					FRISB.json.fetch(function(){
+						FRISB.page.render('ranking');
 					});
-			    },
-				
-			    '*': function() { FRISB.page.render('schedule'); }
+				}
 			});
-		},
-
-		change: function() {
-            var route = window.location.hash.slice(2),
-            sections = qwery('section'),
-            section = qwery('[data-route=' + route + ']')[0];
-
-            // Show active section, hide all other
-            if(section) {
-            	for(var i=0; i < sections.length; i++){
-            		sections[i].classList.remove('active');
-            	}
-            	section.classList.add('active');
-            }
-
-            // Default route
-            if(!route) { sections[0].classList.add('active'); }
-
 		}
 	};
 
 	//All Router pages
 	FRISB.page = {
-		render: function(route) {
-			var data = eval('FRISB.' + route);								//Eval is Less evil in this case because 'route' is a controlled variabele, not direct user input.
-			var calculations = eval('FRISB.' + route + '.calculations');
-
-			Transparency.render(qwery('[data-route='+route+']')[0], data, calculations);
-			FRISB.router.change();
+		render: function(pagename) {
+			//Show the loader
+			loader.style.display = 'block';
+			
+			//Change page title
+			var titleCaps = pagename[0].toUpperCase() + pagename.slice(1);
+			document.title = "Autumn 2013 | Amsterdam ultimate - 2013 | " + titleCaps;
+						
+			//Render the page if found in localstorage
+			if (localStorage[pagename]) {
+				var directives = eval('FRISB.directives.'+pagename);
+				var data = JSON.parse(localStorage[pagename]);
+				Transparency.render(qwery('[data-route='+pagename+']')[0], data, directives);
+			}
+				
+			//Display correct section
+			var all_sections = qwery('section > section');
+			for(var i=0; i < all_sections.length; i++){	all_sections[i].classList.remove('active');	}				
+			qwery('[data-route='+pagename+']')[0].classList.add('active');
+				
+			//Hide the loader
+			loader.style.display = 'none';
 		}
 	}
 	
+	FRISB.json = {
+		fetch: function(callback) {
+			//Check if localstorage exists, Fetch it
+			if (!localStorage['ranking']) {
+			//if (1 == 1) {
+				var api_url = 'https://api.leaguevine.com/v1/pools/?tournament_id=' + tournament_id;
+				$$.json(api_url + acces_token,{},function(data){
+				
+					//Set the directives
+					var directives = FRISB.directives.ranking;
+					
+					//Cache, Render and Log it
+					localStorage['ranking'] = JSON.stringify(data);
+					Transparency.render(qwery('[data-route=ranking]')[0], data, directives);
+					console.log(data);
+					
+					var api_url = 'https://api.leaguevine.com/v1/games/?tournament_id=' + tournament_id + '&limit=200';
+					$$.json(api_url + acces_token,{},function(data){
+					
+						//Set the directives
+						var directives = FRISB.directives.schedule;
+						
+						//Cache, Render and Log it
+						localStorage['schedule'] = JSON.stringify(data);
+						Transparency.render(qwery('[data-route=schedule]')[0], data, directives);
+						console.log(data);							
+						
+						callback(); //Tell Routie we are ready
+						
+					});
+				});
+			} else {
+				callback(); //Nothing to do here
+			}
+		},
+		post: function(postData) {
+            var url = 'https://api.leaguevine.com/v1/game_scores/';
+            var postData = JSON.stringify(postData);
+
+            // Create request
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST',url,true);
+			
+			//Check for response
+			xhr.onreadystatechange = function() {
+				//alert(xhr.readyState);
+				if (xhr.readyState == 4 && xhr.status == 200) {
+					alert('succes!');
+				}
+			}; 
+
+            // Set request headers
+            xhr.setRequestHeader('Content-type','application/json');
+            xhr.setRequestHeader('Authorization','bearer ' + acces_number);
+                        
+            // Send request (with data as a json string)
+            xhr.send(postData);
+		}
+	}
+	
+	FRISB.buttons = {
+		init: function() {
+			var element = document.getElementById('team1up');
+			element.addEventListener('click',function(){
+				var element = qwery('[data-bind=team_1_score]')[0];
+				element.innerHTML++;
+			});			
+			var element = document.getElementById('team1down');
+			element.addEventListener('click',function(){
+				var element = qwery('[data-bind=team_1_score]')[0];
+				var value = element.innerHTML;
+				if (value > 0) { element.innerHTML--; }
+			});
+			var element = document.getElementById('team2up');
+			element.addEventListener('click',function(){
+				var element = qwery('[data-bind=team_2_score]')[0];
+				element.innerHTML++;
+			});
+			var element = document.getElementById('team2down');
+			element.addEventListener('click',function(){
+				var element = qwery('[data-bind=team_2_score]')[0];
+				var value = element.innerHTML;
+				if (value > 0) { element.innerHTML--; }
+			});
+			var element = document.getElementById('submit');
+			element.addEventListener('click',function(){
+				if (confirm('Weet je zeker dat je de score in wilt sturen?')){
+					var element = qwery('[data-bind=team_1_score]')[0];
+					var value1 = element.innerHTML;
+					var element = qwery('[data-bind=team_2_score]')[0];
+					var value2 = element.innerHTML;
+					
+					FRISB.json.post({
+						game_id: game_id,
+						team_1_score: value1,
+						team_2_score: value2,
+						is_final: 'False'
+					});
+				}
+			});
+		}
+	}
 	
 	//Initiate the Application
 	domready(function() {

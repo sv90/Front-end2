@@ -3,128 +3,103 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Fris-B App</title>
+		<title>Autumn 2013 | Amsterdam ultimate - 2013</title>
 		<link href="css/style.css" rel="stylesheet">
+		<link href="css/loader.css" rel="stylesheet">
+		<link rel="icon" type="image/png" href="images/icon.ico">
 	</head>
-<body>
-	<header>
-		<h1>Tournament: Amsterdam Ultimate Autumn</h1>
-		<nav>
-			<ul>
-				<li><a href="#/schedule">Schedule page</a></li>
-				<li><a href="#/game">Game page</a></li>
-				<li><a href="#/ranking">Ranking page</a></li>
-				<li><a href="#/movies">Movies page</a></li>
-		    </ul>
-		</nav>
-	</header>
-	
-	<article id="content">
-		<section data-route="schedule" class="active">
-			<h1 data-bind="title"></h1>			  
-			<table>
-                <tr>
-                    <th data-bind="today"></th>
-                    <th>Team</th>
-                    <th>Result</th>
-                    <th>Team</th>
-                </tr>
-				<tbody data-bind="data">
-					<tr>
-						<td data-bind="date"></td>
-						<td data-bind="team1"></td>
-						<td><span data-bind="team1Score"></span> - <span data-bind="team2Score"></span></td>
-						<td data-bind="team2"></td>
-					</tr>
-				</tbody>
-            </table>			  
-		</section>
-
-		<section data-route="game">
-			<h1 data-bind="title"></h1>
-			<table>
-                <tr>
-                    <th>Team</th>
-                    <th>Result</th>
-                    <th>Team</th>
-                </tr>
-
-                <tr>
-                    <td class="winner">Boomsquad</td>
-                    <td>15 - 8</td>
-                    <td>Burning Snow</td>
-                </tr>
-            </table>
-			<table>
-                <tr>
-                    <th>Score</th>
-                    <th>Team</th>
-                    <th>Points</th>
-                    <th>Team</th>
-                </tr>
-				<tbody data-bind="data">
-					<tr>
-						<td data-bind="score"></td>
-						<td data-bind="team1"></td>
-						<td><span data-bind="team1Score"></span> - <span data-bind="team2Score"></span></td>
-						<td data-bind="team2"></td>
-					</tr>
-				</tbody>
-            </table>
-		</section>
-
-
-		<section data-route="ranking">
-			<h1 data-bind="title"></h1>
-			<table>
-                <tr>
-                    <th>Team</th>
-                    <th>W</th>
-                    <th>L</th>
-                    <th>Points won</th>
-                    <th>Points lost</th>
-                    <th>+/-</th>
-                </tr>
-				<tbody data-bind="data">
-					<tr>
-						<td data-bind="team"></td>
-						<td data-bind="Win"></td>
-						<td data-bind="Lost"></td>
-						<td data-bind="Pw"></td>
-						<td data-bind="Pl"></td>
-						<td data-bind="Pl"></td>
-					</tr>
-				</tbody>
-			</table>
-		</section>
+	<body>
+		<header>
+			<h1>Tournament: Amsterdam Ultimate Autumn</h1>
+			<nav>
+				<ul>
+					<li><a href="#/ranking" class="active">Ranking</a></li>
+					<li><a href="#/schedule">Schedule</a></li>
+				</ul>
+			</nav>
+		</header>
 		
-		<section data-route="movies">
-			<h1 data-bind="title"></h1>
-			<table>
-                <tr>
-                    <th>Title</th>
-                    <th>Description</th>
-					<th>Release date</th>
-                </tr>
-				<tbody data-bind="data">
-					<tr>
-						<td data-bind="title"></td>
-						<td data-bind="description"></td>
-						<td data-bind="release_date"></td>
-					</tr>
-				</tbody>
-			</table>
-		</section>
-		
-	</article>
+		<section>
+			
+			<section data-route="ranking">
+						<div data-bind="objects">
+							<div>
+								<h1>Pool <span data-bind="name"></span></h1>
+								<table>
+									<tr>
+										<th>Teamname</th>
+										<th>Wins</th>
+										<th>Losses</th>
+										<th>Scored</th>
+										<th>+ -</th>
+									</tr>
+									<tbody data-bind="standings">
+										<tr data-bind="team">
+											<td><a data-bind="name"></a></td>
+											<td data-bind="wins"></td>
+											<td data-bind="losses"></td>
+											<td data-bind="points_scored"></td>
+											<td data-bind="plus_minus"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>							
+						</div>				
+				
+			</section>
 
-	<!-- Include all Javascripts -->
-	<script src="js/libs/routie.min.js"></script>
-	<script src="js/libs/ready.min.js"></script>
-	<script src="js/libs/qwery.min.js"></script>
-	<script src="js/libs/transparancy.min.js"></script>
-	<script src="js/libs/microajax.min.js"></script>
-	<script src="js/app.js"></script>
-	
-</body>
+			<section data-route="game">
+				<div>
+					<div data-bind="team_1"><h2 data-bind="name"></h2></div>
+					<img src="images/arrow.svg" id="team1up">
+					<p data-bind="team_1_score"></p>
+					<img src="images/arrow2.svg" id="team1down">
+				</div>
+				<div>
+					<div data-bind="team_2"><h2 data-bind="name"></h2></div>
+					<img src="images/arrow.svg" id="team2up">
+					<p data-bind="team_2_score"></p>
+					<img src="images/arrow2.svg" id="team2down">
+				</div>
+				<button id="submit">Submit score</button>
+			</section>
+
+			<section data-route="schedule">
+				<h1 data-bind="date"></h1>
+				<table>
+					<tbody data-bind="objects">
+						<tr>
+							<td data-bind="start_time"></td>
+							<td data-bind="team_1"><span data-bind="name"></span></td>
+							<td data-bind="team_2"><span data-bind="name"></span></td>
+							<td><a data-bind="track_score">Track Score</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+								
+		</article>
+		
+		<!-- Loader from http://cssload.net/ -->
+		<div id="loader">
+			<div class="f_circleG" id="frotateG_01"></div>
+			<div class="f_circleG" id="frotateG_02"></div>
+			<div class="f_circleG" id="frotateG_03"></div>
+			<div class="f_circleG" id="frotateG_04"></div>
+			<div class="f_circleG" id="frotateG_05"></div>
+			<div class="f_circleG" id="frotateG_06"></div>
+			<div class="f_circleG" id="frotateG_07"></div>
+			<div class="f_circleG" id="frotateG_08"></div>
+		</div>
+
+		<!-- Include all Javascripts -->
+		<script src="js/libs/routie.min.js"></script>
+		<script src="js/libs/ready.min.js"></script>
+		<script src="js/libs/qwery.min.js"></script>
+		<script src="js/libs/transparancy.min.js"></script>
+		<script src="js/libs/microajax.min.js"></script>
+		<script src="js/libs/quo.js"></script>
+		<script src="js/app.js"></script>
+		
+	</body>
 </html>
